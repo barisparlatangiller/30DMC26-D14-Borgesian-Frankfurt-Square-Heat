@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Map That Knows Too Much · Frankfurt</title>
+<meta name="description" content="#30DayMapChallenge 2026 · Day 14 · Borgesian map. Felt temperature (UTCI) on Frankfurt's squares at 100 m, 10 m and 1 m, on the hottest afternoon of the June 2026 heatwave.">
+<meta name="theme-color" content="#0d0b10">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<link href="style.css?v=1" rel="stylesheet">
+</head>
+<body>
+<div id="map" aria-label="Map of Frankfurt's Altstadt with felt temperature at the chosen resolution"></div>
+
+<header class="card head">
+  <div class="eb">#30DayMapChallenge · Day 14 · Borgesian map</div>
+  <h1>The map that<br><em>knows too much</em></h1>
+  <p class="lede">In Borges' one-paragraph fable, an empire's cartographers grow their map until it is as large as the empire itself, and nobody can use it.
+    This map of Frankfurt's squares goes down to <b>1 m</b>. Does that detail help, or only weigh?</p>
+  <p class="find" id="find"></p>
+  <div class="res" role="group" aria-label="Resolution">
+    <button data-s="100">100 m</button><button data-s="10">10 m</button><button data-s="1" class="on">1 m</button>
+  </div>
+  <div class="descend"><button id="play" class="pill">▶ 100 m → 1 m</button><span id="resv" class="mono">1 m · 1,966,365 cells</span></div>
+  <div class="time">
+    <label for="hour">27 June 2026, hottest day of the heatwave · <b id="hourv" class="mono">16:00</b></label>
+    <input id="hour" type="range" min="0" max="16" step="1" value="9">
+  </div>
+  <div class="legend" id="legend"></div>
+  <button id="about" class="link">How it's made</button>
+</header>
+
+<aside class="card side" id="side">
+  <div class="eb" id="sq-eb">Square</div>
+  <h2 id="sq-name">Römerberg</h2>
+  <div class="says">
+    <div><span>100 m says</span><b id="say100">—</b></div>
+    <div><span>10 m says</span><b id="say10">—</b></div>
+    <div class="one"><span>1 m says</span><b id="say1">—</b></div>
+  </div>
+  <div id="hist" class="hist"></div>
+  <p id="sq-text" class="note"></p>
+  <h3>Where the coarse map hides the most</h3>
+  <ol id="list" class="list"></ol>
+</aside>
+
+<div class="drawer" id="drawer" hidden><div class="panel">
+  <button class="x" id="dclose" aria-label="Close">×</button>
+  <div class="eb">Method</div>
+  <h2>One model, three maps</h2>
+  <p>The values are <b>felt temperature (UTCI)</b> from a SOLWEIG radiation model at <b>1 m × 1 m</b>, hour by hour, for Frankfurt's Altstadt and Innenstadt during the
+    24–28 June 2026 heatwave (own project, "Frankfurt Platz Heat"). This map shows the hottest day, 27 June, 07:00–23:00 summer time.</p>
+  <p>The 10 m and 100 m maps are not new models: they are the <b>same 1 m result averaged</b> into 10 × 10 and 100 × 100 m blocks (a block needs at least a quarter of its
+    area in the open; buildings and the river are left out). So every difference you see between the three maps is what averaging hides, nothing else.</p>
+  <p>UTCI classes: 26–32 °C moderate, 32–38 strong, 38–46 very strong, above 46 °C extreme heat stress.</p>
+  <p class="fine">Limits: provisional DWD weather from the airport station, one air temperature for the whole area; differences are driven by sun, shade, sky view and surfaces.
+    Not validated with measurements in Frankfurt. Aerial photo: © HVBG Hessen (DOP20), fallback Esri. Buildings: ALKIS. Squares: ATKIS/ALKIS AX_Platz.
+    By Barış Parlatangiller, built with Claude. <a href="https://github.com/barisparlatangiller/30DMC26-D14-Borgesian-Frankfurt-Square-Heat" target="_blank" rel="noopener">Code &amp; data</a> ·
+    <a href="https://barisparlatangiller.github.io/" target="_blank" rel="noopener">All 30 maps</a></p>
+</div></div>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="app.js?v=1"></script>
+</body>
+</html>
