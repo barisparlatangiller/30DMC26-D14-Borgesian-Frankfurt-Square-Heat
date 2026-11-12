@@ -63,13 +63,16 @@
   const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
   const wide = innerWidth > 900;
   const map = new maplibregl.Map({ container: "map", style: { version: 8, glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf", sources: {}, layers: [{ id: "bg", type: "background", paint: { "background-color": "#0d0b10" } }] },
-    bounds: [meta.corners[3], meta.corners[1]], fitBoundsOptions: { padding: wide ? { left: 400, right: 380, top: 30, bottom: 30 } : 10 }, maxZoom: 20, attributionControl: { compact: true, customAttribution: "UTCI: SOLWEIG 1 m · Aerial © HVBG Hessen (DOP20) · ALKIS" } });
+    center: wide ? [8.6825, 50.1108] : [8.6815, 50.1112], zoom: wide ? 15.55 : 14.7, maxZoom: 20, attributionControl: { compact: true, customAttribution: "UTCI: SOLWEIG 1 m · Aerial © HVBG Hessen (DOP20) · ALKIS" } });
   window.map = map;
   map.on("load", async () => {
     map.addSource("aerial", { type: "raster", tiles: [DOP], tileSize: 512, maxzoom: 20 });
-    map.addLayer({ id: "aerial", type: "raster", source: "aerial", paint: { "raster-saturation": -0.55, "raster-brightness-max": 0.62, "raster-fade-duration": 150 } });
+    map.addLayer({ id: "aerial", type: "raster", source: "aerial", paint: { "raster-saturation": -0.55, "raster-brightness-max": 0.5, "raster-fade-duration": 150 } });
+    // the same DOP20 photo for the model area, served with the map (works even when the Hessen WMS is slow or blocked)
+    map.addSource("dop", { type: "image", url: "data/dop20_altstadt.jpg", coordinates: meta.corners });
+    map.addLayer({ id: "dop", type: "raster", source: "dop", paint: { "raster-saturation": -0.55, "raster-brightness-max": 0.62, "raster-fade-duration": 0 } });
     let err = 0; map.on("error", e => { if (e.sourceId === "aerial" && ++err === 4) { map.removeLayer("aerial"); map.removeSource("aerial");
-      map.addSource("aerial", { type: "raster", tiles: [ESRI], tileSize: 256, maxzoom: 19 }); map.addLayer({ id: "aerial", type: "raster", source: "aerial", paint: { "raster-saturation": -0.55, "raster-brightness-max": 0.62 } }, "utci"); } });
+      map.addSource("aerial", { type: "raster", tiles: [ESRI], tileSize: 256, maxzoom: 19 }); map.addLayer({ id: "aerial", type: "raster", source: "aerial", paint: { "raster-saturation": -0.55, "raster-brightness-max": 0.5 } }, "dop"); } });
     map.addSource("utci", { type: "canvas", canvas: cv, coordinates: meta.corners, animate: false });
     map.addLayer({ id: "utci", type: "raster", source: "utci", paint: { "raster-resampling": "nearest", "raster-opacity": 0.86, "raster-fade-duration": 0 } });
     map.addSource("sq", { type: "geojson", data: plazas });
